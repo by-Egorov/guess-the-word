@@ -22,7 +22,7 @@ const App = () => {
 	// Видимые буквы
 	const [visibleLetters, setVisibleLetters] = useState([])
 	// Выбор категории
-	const [selectedCategory, setSelectedCategory] = useState('')
+	const [selectedCategory, setSelectedCategory] = useState(null)
 
 	const arrWord = word.map(element => element.props.children)
 
@@ -36,8 +36,9 @@ const App = () => {
 			return
 		}
 
-		
-		const wordCategory = randomWord.find(category => category.category === selectedCategory)
+		const wordCategory = randomWord.find(
+			category => category.category === selectedCategory
+		)
 		const wordList = wordCategory.words
 		const wordShow = wordList[Math.floor(Math.random() * wordList.length)]
 
@@ -117,6 +118,16 @@ const App = () => {
 				})
 				return newCorrectLetters
 			})
+			const isWordComplete = arrWord.every(letter =>
+				correctLetters.includes(letter)
+			)
+			if (isWordComplete) {
+				setWin(true)
+				setTimeout(() => {
+					setWin(false)
+					handleRandomWord()
+				}, 2000)
+			}
 		} else {
 			if (count < 5) {
 				setCount(count + 1)
@@ -126,19 +137,6 @@ const App = () => {
 			}
 		}
 	}
-
-	useEffect(() => {
-		const isWordComplete = arrWord.every(letter =>
-			correctLetters.includes(letter)
-		)
-		if (isWordComplete) {
-			setWin(true)
-			setTimeout(() => {
-				setWin(false)
-				handleRandomWord()
-			}, 2000);
-		}
-	}, [correctLetters])
 
 	return (
 		<div className='App'>
@@ -168,19 +166,19 @@ const App = () => {
 
 				<div className={`field ${defeat || win ? 'game-over' : ''}`}>
 					<div className='field__word'>
-					<select
-              className='field__category_select'
-              onChange={e => setSelectedCategory(e.target.value)}
-            >
-              <option value='' disabled selected>
-                Выберите категорию
-              </option>
-              {randomWord.map(category => (
-                <option key={category.category} value={category.category}>
-                  {category.category}
-                </option>
-              ))}
-            </select>
+						<select
+							className='field__category_select'
+							onChange={e => setSelectedCategory(e.target.value)}
+						>
+							<option value='' disabled selected>
+								Выберите категорию
+							</option>
+							{randomWord.map(category => (
+								<option key={category.category} value={category.category}>
+									{category.category}
+								</option>
+							))}
+						</select>
 						<div className='field__word_hidden_item'>{word}</div>
 						<button className='field__button' onClick={handleRandomWord}>
 							<img src={play} alt='play' />
