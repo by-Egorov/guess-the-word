@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { alphabet } from './utils/alphabet'
 import { randomWord } from './utils/words'
+import {
+	test,
+	test2,
+	test3,
+	test4,
+	test5,
+	test6,
+	test7,
+} from './assets/progress'
 import play from './assets/play.png'
 import sad from './assets/sad.png'
 import happy from './assets/happy.png'
@@ -23,22 +32,25 @@ const App = () => {
 	const [visibleLetters, setVisibleLetters] = useState([])
 	// Выбор категории
 	const [selectedCategory, setSelectedCategory] = useState(null)
+	// Кол-во неугаданных букв
+	const [incorrectCount, setIncorrectCount] = useState(0)
 
 	const arrWord = word.map(element => element.props.children)
-
+	const handleResetCategory = () => {
+		setSelectedCategory(null)
+	}
 	const handleRandomWord = () => {
 		setCorrectLetters([])
 		setCount(0)
-
-		// Проверка, выбрана ли категория
-		if (!selectedCategory) {
-			alert('Выберите категорию перед началом игры.')
-			return
-		}
+		setIncorrectCount(0)
 
 		const wordCategory = randomWord.find(
 			category => category.category === selectedCategory
 		)
+		if (!wordCategory) {
+			console.log('Категория не найдена.')
+			return
+		}
 		const wordList = wordCategory.words
 		const wordShow = wordList[Math.floor(Math.random() * wordList.length)]
 
@@ -118,19 +130,10 @@ const App = () => {
 				})
 				return newCorrectLetters
 			})
-			const isWordComplete = arrWord.every(letter =>
-				correctLetters.includes(letter)
-			)
-			if (isWordComplete) {
-				setWin(true)
-				setTimeout(() => {
-					setWin(false)
-					handleRandomWord()
-				}, 2000)
-			}
 		} else {
 			if (count < 5) {
 				setCount(count + 1)
+				setIncorrectCount(incorrectCount + 1)
 			} else {
 				setDefeat(true)
 				setCount(0)
@@ -138,68 +141,83 @@ const App = () => {
 		}
 	}
 
+	useEffect(() => {
+		const isWordComplete = arrWord.every(letter =>
+			correctLetters.includes(letter)
+		)
+		if (isWordComplete) {
+			setWin(true)
+		} else {
+			return
+		}
+	}, [correctLetters])
+
 	return (
 		<div className='App'>
-			<div className='wrapper'>
-				{defeat && (
-					<div className='defeat'>
-						<div className='defeat__word'>{arrWord}</div>
-						<div className='defeat__content'>
-							<img src={sad} alt='sad' />
-						</div>
-
-						<div className='defeat__repeat'>
-							<button className='field__button' onClick={handleRandomWord}>
-								<img src={play} alt='play' />
-							</button>
-						</div>
+			{selectedCategory ? (
+				<div className='wrapper'>
+				
+					<div className='progress'>
+						{defeat || win ? (
+							<>
+								<div className='game_over'>
+									<span className='game_over-btn' onClick={handleRandomWord}>
+										Еще раз
+									</span>
+									<span className='game_over-btn' onClick={handleResetCategory}>
+										Выбрать тему
+									</span>
+								</div>
+							</>
+						) : (
+							<>
+								{incorrectCount === 0 && <img src={test} alt='test' />}
+								{incorrectCount === 1 && <img src={test2} alt='image1' />}
+								{incorrectCount === 2 && <img src={test3} alt='image2' />}
+								{incorrectCount === 3 && <img src={test4} alt='image3' />}
+								{incorrectCount === 4 && <img src={test5} alt='image3' />}
+								{incorrectCount === 5 && <img src={test6} alt='image3' />}
+								{incorrectCount === 6 && <img src={test7} alt='image3' />}
+							</>
+						)}
 					</div>
-				)}
-				{win && (
-					<div className='win'>
-						<div className='win__word'>{arrWord}</div>
-						<div className='win__content'>
-							<img src={happy} alt='happy' />
+					<div className='field'>
+						<div className='field__word'>
+							<div className='field__word_hidden_item'>{word}</div>
 						</div>
-					</div>
-				)}
-
-				<div className={`field ${defeat || win ? 'game-over' : ''}`}>
-					<div className='field__word'>
-						<select
-							className='field__category_select'
-							onChange={e => setSelectedCategory(e.target.value)}
-						>
-							<option value='' disabled selected>
-								Выберите категорию
-							</option>
-							{randomWord.map(category => (
-								<option key={category.category} value={category.category}>
-									{category.category}
-								</option>
+						<div className='field__progress'>
+							{isPlay && <span>{count} / 6 </span>}
+						</div>
+						<div className='field__alphabet'>
+							{alphabet.map((item, i) => (
+								<div
+									className={`field__alphabet_item ${isPlay && 'play'} `}
+									key={i}
+									onClick={check}
+								>
+									{item}
+								</div>
 							))}
-						</select>
-						<div className='field__word_hidden_item'>{word}</div>
-						<button className='field__button' onClick={handleRandomWord}>
-							<img src={play} alt='play' />
-						</button>
-					</div>
-					<div className='field__progress'>
-						{isPlay && <span>{count} / 6 </span>}
-					</div>
-					<div className='field__alphabet'>
-						{alphabet.map((item, i) => (
-							<div
-								className={`field__alphabet_item ${isPlay && 'play'} `}
-								key={i}
-								onClick={check}
-							>
-								{item}
-							</div>
-						))}
+						</div>
 					</div>
 				</div>
-			</div>
+			) : (
+				<>
+					<select
+						className='field__category_select'
+						onChange={e => setSelectedCategory(e.target.value)}
+					>
+						<option value='' disabled selected>
+							Выберите категорию
+						</option>
+						{randomWord.map(category => (
+							<option key={category.category} value={category.category}>
+								{category.category}
+							</option>
+						))}
+					</select>
+				</>
+			)}
 		</div>
 	)
 }

@@ -1,0 +1,27 @@
+@mixin desktop {
+  @media screen and (max-width: 1200px) {
+    @content;
+  }
+}
+@mixin laptop {
+  @media screen and (max-width: 992px) {
+    @content;
+  }
+}
+@mixin tablets {
+  @media screen and (max-width: 844px) {
+    @content;
+  }
+}
+@mixin phones {
+  @media screen and (max-width: 480px) {
+    @content;
+  }
+}
+
+@mixin placeholder {
+  &::-webkit-input-placeholder { @content; }
+  &:-moz-placeholder           { @content; }
+  &::-moz-placeholder          { @content; }
+  &:-ms-input-placeholder      { @content; }  
+}
