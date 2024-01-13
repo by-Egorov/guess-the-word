@@ -10,9 +10,8 @@ import {
 	test6,
 	test7,
 } from './assets/progress'
-import play from './assets/play.png'
-import sad from './assets/sad.png'
 import happy from './assets/happy.png'
+import sad from './assets/sad.png'
 const App = () => {
 	// Счетчик попыток угадать слово
 	const [count, setCount] = useState(0)
@@ -126,7 +125,10 @@ const App = () => {
 							</div>
 						)
 					})
+					
 					return updatedWord
+
+					
 				})
 				return newCorrectLetters
 			})
@@ -156,7 +158,6 @@ const App = () => {
 		<div className='App'>
 			{selectedCategory ? (
 				<div className='wrapper'>
-				
 					<div className='progress'>
 						{defeat || win ? (
 							<>
@@ -167,6 +168,12 @@ const App = () => {
 									<span className='game_over-btn' onClick={handleResetCategory}>
 										Выбрать тему
 									</span>
+									{defeat && <>
+										<img src={sad} alt="sad" />
+									</>}
+									{win && <>
+										<img src={happy} alt="happy" />
+									</>}
 								</div>
 							</>
 						) : (
