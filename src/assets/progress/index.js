@@ -6,5 +6,6 @@ import test4 from './test4.png';
 import test5 from './test5.png';
 import test6 from './test6.png';
 import test7 from './test7.png';
+import test8 from './test8.png';
 
-export { test, test2, test3, test4, test5, test6, test7 };
+export { test, test2, test3, test4, test5, test6, test7, test8 };

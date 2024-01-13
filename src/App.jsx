@@ -9,9 +9,8 @@ import {
 	test5,
 	test6,
 	test7,
+	test8,
 } from './assets/progress'
-import happy from './assets/happy.png'
-import sad from './assets/sad.png'
 const App = () => {
 	// Счетчик попыток угадать слово
 	const [count, setCount] = useState(0)
@@ -169,10 +168,10 @@ const App = () => {
 										Выбрать тему
 									</span>
 									{defeat && <>
-										<img src={sad} alt="sad" />
+										<img src={test7} alt="sad" />
 									</>}
 									{win && <>
-										<img src={happy} alt="happy" />
+										<img src={test8} alt="happy" />
 									</>}
 								</div>
 							</>
@@ -184,7 +183,6 @@ const App = () => {
 								{incorrectCount === 3 && <img src={test4} alt='image3' />}
 								{incorrectCount === 4 && <img src={test5} alt='image3' />}
 								{incorrectCount === 5 && <img src={test6} alt='image3' />}
-								{incorrectCount === 6 && <img src={test7} alt='image3' />}
 							</>
 						)}
 					</div>
