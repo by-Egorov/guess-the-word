@@ -138,6 +138,7 @@
 			cursor: pointer;
 			pointer-events: none;
 			padding: 15px;
+			text-shadow: -1px 5px 5px rgb(195,188,188);
 
 			@include tablets {
 				padding: 10px;
@@ -169,6 +170,27 @@
 }
 .visible {
 	color: red;
+}
+.correct {
+	background-image: url('./assets/yes.png');
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	color: black;
+}
+.incorrect {
+	background-image: url('./assets/no.png');
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+	color: black;
+	cursor: not-allowed;
+	pointer-events: none;
+}
+.check {
+	color: red;
+	letter-spacing: 1rem;
+	padding-top: 50px;
 }
 .play {
 	pointer-events: all;

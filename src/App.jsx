@@ -22,6 +22,8 @@ const App = () => {
 	const [isPlay, setIsPlay] = useState(false)
 	// Массив правильных букв
 	const [correctLetters, setCorrectLetters] = useState([])
+	// Массив неправильных букв
+	const [inCorrectLetters, setInCorrectLetters] = useState([])
 	// Случайное слово
 	const [word, setWord] = useState([])
 	// Случайная категория
@@ -39,6 +41,7 @@ const App = () => {
 	}
 	const handleRandomWord = () => {
 		setCorrectLetters([])
+		setInCorrectLetters([])
 		setCount(0)
 		setIncorrectCount(0)
 
@@ -82,7 +85,6 @@ const App = () => {
 
 			setCorrectLetters(prevCorrectLetters => {
 				const newCorrectLetters = [...prevCorrectLetters, ...visibleLetters]
-				console.log(newCorrectLetters)
 				return newCorrectLetters
 			})
 
@@ -96,23 +98,22 @@ const App = () => {
 	}
 
 	const getLetterAlphabet = element => {
-		return alphabet.find(el => el === element)
+		const symbol = alphabet.find(el => el === element)
+		console.log(symbol)
+		return symbol
 	}
 	const check = event => {
 		const element = event.target.textContent
 		const foundElement = getLetterAlphabet(element)
-		if (arrWord.includes(foundElement)) {
-			console.log('Правильная буква')
 
+		if (arrWord.includes(foundElement)) {
 			setCorrectLetters(prevCorrectLetters => {
 				const newCorrectLetters = [...prevCorrectLetters, foundElement]
-				console.log(newCorrectLetters)
 
 				setWord(prevWord => {
 					const updatedWord = prevWord.map((element, index) => {
 						const letter = element.props.children
 						const isHidden = !newCorrectLetters.includes(letter)
-						console.log(letter, isHidden)
 						return (
 							<div
 								key={element.key}
@@ -124,20 +125,26 @@ const App = () => {
 							</div>
 						)
 					})
-					
-					return updatedWord
 
-					
+					return updatedWord
 				})
 				return newCorrectLetters
 			})
 		} else {
+			setInCorrectLetters(prev => {
+				return [...prev, foundElement]
+			})
+			if (inCorrectLetters.includes(foundElement)) {
+				return
+			}
+			console.log(inCorrectLetters)
 			if (count < 5) {
 				setCount(count + 1)
 				setIncorrectCount(incorrectCount + 1)
 			} else {
 				setDefeat(true)
 				setCount(0)
+				setIsPlay(false)
 			}
 		}
 	}
@@ -167,12 +174,16 @@ const App = () => {
 									<span className='game_over-btn' onClick={handleResetCategory}>
 										Выбрать тему
 									</span>
-									{defeat && <>
-										<img src={test7} alt="sad" />
-									</>}
-									{win && <>
-										<img src={test8} alt="happy" />
-									</>}
+									{defeat && (
+										<>
+											<img src={test7} alt='sad' />
+										</>
+									)}
+									{win && (
+										<>
+											<img src={test8} alt='happy' />
+										</>
+									)}
 								</div>
 							</>
 						) : (
@@ -188,15 +199,16 @@ const App = () => {
 					</div>
 					<div className='field'>
 						<div className='field__word'>
-							<div className='field__word_hidden_item'>{word}</div>
-						</div>
-						<div className='field__progress'>
-							{isPlay && <span>{count} / 6 </span>}
+							<div className={`field__word_hidden_item ${defeat ? 'check' : ''}`}>
+								{defeat ? arrWord : word}
+							</div>
 						</div>
 						<div className='field__alphabet'>
 							{alphabet.map((item, i) => (
 								<div
-									className={`field__alphabet_item ${isPlay && 'play'} `}
+									className={`field__alphabet_item ${isPlay && 'play'} ${
+										correctLetters.includes(item) ? 'correct' : ''
+									}  ${inCorrectLetters.includes(item) ? 'incorrect' : ''} `}
 									key={i}
 									onClick={check}
 								>
