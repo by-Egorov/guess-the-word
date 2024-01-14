@@ -59,7 +59,6 @@
 		background-color: transparent;
 		border: none;
 		text-align: center;
-		color: green;
 		font-size: 28px;
 		letter-spacing: 1rem;
 
@@ -70,8 +69,8 @@
 		@include tablets {
 			position: absolute;
 			top: 50%;
-			left: 25%;
-			font-size: 16px;
+			left: 15%;
+			font-size: 28px;
 		}
 	}
 	&__word {

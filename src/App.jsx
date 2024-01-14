@@ -26,10 +26,6 @@ const App = () => {
 	const [inCorrectLetters, setInCorrectLetters] = useState([])
 	// Случайное слово
 	const [word, setWord] = useState([])
-	// Случайная категория
-	const [category, setCategory] = useState([])
-	// Видимые буквы
-	const [visibleLetters, setVisibleLetters] = useState([])
 	// Выбор категории
 	const [selectedCategory, setSelectedCategory] = useState(null)
 	// Кол-во неугаданных букв
@@ -55,7 +51,6 @@ const App = () => {
 		const wordList = wordCategory.words
 		const wordShow = wordList[Math.floor(Math.random() * wordList.length)]
 
-		setCategory(wordCategory.category)
 		const generateHiddenLetters = () => {
 			const lettersArray = wordShow.split('')
 
@@ -79,9 +74,6 @@ const App = () => {
 					{visibleLetters.includes(letter) ? letter : letter}
 				</div>
 			))
-
-			// Устанавливаем две отображаемые буквы в состояние
-			setVisibleLetters(visibleLetters)
 
 			setCorrectLetters(prevCorrectLetters => {
 				const newCorrectLetters = [...prevCorrectLetters, ...visibleLetters]
@@ -199,7 +191,9 @@ const App = () => {
 					</div>
 					<div className='field'>
 						<div className='field__word'>
-							<div className={`field__word_hidden_item ${defeat ? 'check' : ''}`}>
+							<div
+								className={`field__word_hidden_item ${defeat ? 'check' : ''}`}
+							>
 								{defeat ? arrWord : word}
 							</div>
 						</div>
