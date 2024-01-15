@@ -1,7 +1,7 @@
 export const randomWord = [
 	{
 		category: 'Природа',
-		words: [
+		word: [
 			'лес',
 			'озеро',
 			'гора',
@@ -53,7 +53,7 @@ export const randomWord = [
 	},
 	{
 		category: 'Животные',
-		words: [
+		word: [
 			'слон',
 			'тигр',
 			'кит',
@@ -104,7 +104,7 @@ export const randomWord = [
 	},
 	{
 		category: 'Наука',
-		words: [
+		word: [
 			'физика',
 			'химия',
 			'биология',

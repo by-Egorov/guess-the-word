@@ -14,6 +14,8 @@ import {
 const App = () => {
 	// Счетчик попыток угадать слово
 	const [count, setCount] = useState(0)
+	const [countWin, setCountWin] = useState(0)
+	const [countDefeat, setCountDefeat] = useState(0)
 	// Проигрыш
 	const [defeat, setDefeat] = useState(false)
 	// Победа
@@ -30,6 +32,8 @@ const App = () => {
 	const [selectedCategory, setSelectedCategory] = useState(null)
 	// Кол-во неугаданных букв
 	const [incorrectCount, setIncorrectCount] = useState(0)
+	// Слова которые были угаданы
+	const [firstWord, setFirstWord] = useState([])
 
 	const arrWord = word.map(element => element.props.children)
 	const handleResetCategory = () => {
@@ -48,8 +52,16 @@ const App = () => {
 			console.log('Категория не найдена.')
 			return
 		}
-		const wordList = wordCategory.words
-		const wordShow = wordList[Math.floor(Math.random() * wordList.length)]
+		const wordList = wordCategory.word
+		const availableWords = wordList.filter(word => !firstWord.includes(word))
+		if (availableWords.length === 0) {
+			// Если отгаданы все слова, сброс массива отгаданных слов
+			setFirstWord([])
+			return
+		}
+		const wordShow =
+			availableWords[Math.floor(Math.random() * availableWords.length)]
+		setFirstWord(prev => [...prev, wordShow])
 
 		const generateHiddenLetters = () => {
 			const lettersArray = wordShow.split('')
@@ -83,6 +95,17 @@ const App = () => {
 			setWord(updatedWord)
 		}
 
+		// const isWordComplete = arrWord.every(letter =>
+		// 	correctLetters.includes(letter)
+		// )
+		// console.log(isWordComplete)
+		// if (isWordComplete) {
+		// 	setWin(true)
+		// 	setCountWin((countWin + 1) - 1)
+		// } else {
+		// 	return
+		// }
+
 		generateHiddenLetters()
 		setIsPlay(true)
 		setDefeat(false)
@@ -91,7 +114,6 @@ const App = () => {
 
 	const getLetterAlphabet = element => {
 		const symbol = alphabet.find(el => el === element)
-		console.log(symbol)
 		return symbol
 	}
 	const check = event => {
@@ -126,21 +148,21 @@ const App = () => {
 			setInCorrectLetters(prev => {
 				return [...prev, foundElement]
 			})
+	
 			if (inCorrectLetters.includes(foundElement)) {
 				return
 			}
-			console.log(inCorrectLetters)
 			if (count < 5) {
 				setCount(count + 1)
 				setIncorrectCount(incorrectCount + 1)
 			} else {
 				setDefeat(true)
+				setCountDefeat(countDefeat + 1)
 				setCount(0)
 				setIsPlay(false)
 			}
 		}
 	}
-
 	useEffect(() => {
 		const isWordComplete = arrWord.every(letter =>
 			correctLetters.includes(letter)
@@ -150,7 +172,7 @@ const App = () => {
 		} else {
 			return
 		}
-	}, [correctLetters])
+	}, [correctLetters, arrWord])
 
 	return (
 		<div className='App'>
@@ -188,6 +210,7 @@ const App = () => {
 								{incorrectCount === 5 && <img src={test6} alt='image3' />}
 							</>
 						)}
+
 					</div>
 					<div className='field'>
 						<div className='field__word'>
@@ -209,6 +232,8 @@ const App = () => {
 									{item}
 								</div>
 							))}
+							<span>Слов отгадано: {countWin}</span>
+							<span>Слов не отгадано: {countDefeat}</span>
 						</div>
 					</div>
 				</div>

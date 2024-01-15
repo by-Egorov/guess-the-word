@@ -33,6 +33,9 @@
 	}
 }
 .progress {
+	display: flex;
+	flex-direction: column;
+	gap: 50px;
 	width: 150px;
 	height: 150px;
 	& img {
