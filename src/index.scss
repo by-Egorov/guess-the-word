@@ -35,16 +35,15 @@
 .progress {
 	display: flex;
 	flex-direction: column;
-	gap: 50px;
-	width: 150px;
-	height: 150px;
+	width: 250px;
+	height: 170px;
 	& img {
 		width: 100%;
 	}
 
 	@include tablets {
-		width: 150px;
-		height: 150px;
+		width: 250px;
+    height: 170px;
 	}
 }
 .field {
@@ -260,9 +259,20 @@
 
 .game_over {
 	display: flex;
+	padding: 10px;
+
+&-buttons {
+	display: flex;
 	flex-direction: column;
 	gap: 15px;
 }
-.game_over-btn {
-	cursor: pointer;
+	&-btn {
+		width: 24px;
+		height: 24px;
+		cursor: pointer;
+	
+		& img {
+			width: 100%;
+		}
+	}
 }

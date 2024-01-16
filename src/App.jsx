@@ -11,6 +11,8 @@ import {
 	test7,
 	test8,
 } from './assets/progress'
+import play from './assets/play.jpg'
+import reset from './assets/reset.jpg'
 const App = () => {
 	// Счетчик попыток угадать слово
 	const [count, setCount] = useState(0)
@@ -34,8 +36,8 @@ const App = () => {
 	const [incorrectCount, setIncorrectCount] = useState(0)
 	// Слова которые были угаданы
 	const [firstWord, setFirstWord] = useState([])
-
 	const arrWord = word.map(element => element.props.children)
+
 	const handleResetCategory = () => {
 		setSelectedCategory(null)
 	}
@@ -48,68 +50,58 @@ const App = () => {
 		const wordCategory = randomWord.find(
 			category => category.category === selectedCategory
 		)
-		if (!wordCategory) {
+		const wordList = wordCategory.word
+		if (wordCategory.category) {
+			const availableWords = wordList.filter(word => !firstWord.includes(word))
+			const wordShow =
+				availableWords[Math.floor(Math.random() * availableWords.length)]
+			if (availableWords.length === 0) {
+				// Если отгаданы все слова, сброс массива отгаданных слов
+				setFirstWord([])
+				return
+			}
+
+			setFirstWord(prev => [...prev, wordShow])
+
+			const generateHiddenLetters = () => {
+				const lettersArray = wordShow.split('')
+
+				// Выбираем две случайные буквы для отображения
+				const visibleLetters = []
+				while (visibleLetters.length < 2) {
+					const randomIndex = Math.floor(Math.random() * lettersArray.length)
+					if (!visibleLetters.includes(lettersArray[randomIndex])) {
+						visibleLetters.push(lettersArray[randomIndex])
+					}
+				}
+
+				// Обновляем массив word, чтобы показать две отображаемые буквы
+				const updatedWord = lettersArray.map((letter, index) => (
+					<div
+						key={index}
+						className={`field__word_hidden_item-word ${
+							visibleLetters.includes(letter) ? '' : 'hidden'
+						}`}
+					>
+						{visibleLetters.includes(letter) ? letter : letter}
+					</div>
+				))
+
+				setCorrectLetters(prevCorrectLetters => {
+					const newCorrectLetters = [...prevCorrectLetters, ...visibleLetters]
+					return newCorrectLetters
+				})
+
+				setWord(updatedWord)
+			}
+			generateHiddenLetters()
+			setIsPlay(true)
+			setDefeat(false)
+			setWin(false)
+		} else {
 			console.log('Категория не найдена.')
 			return
 		}
-		const wordList = wordCategory.word
-		const availableWords = wordList.filter(word => !firstWord.includes(word))
-		if (availableWords.length === 0) {
-			// Если отгаданы все слова, сброс массива отгаданных слов
-			setFirstWord([])
-			return
-		}
-		const wordShow =
-			availableWords[Math.floor(Math.random() * availableWords.length)]
-		setFirstWord(prev => [...prev, wordShow])
-
-		const generateHiddenLetters = () => {
-			const lettersArray = wordShow.split('')
-
-			// Выбираем две случайные буквы для отображения
-			const visibleLetters = []
-			while (visibleLetters.length < 2) {
-				const randomIndex = Math.floor(Math.random() * lettersArray.length)
-				if (!visibleLetters.includes(lettersArray[randomIndex])) {
-					visibleLetters.push(lettersArray[randomIndex])
-				}
-			}
-
-			// Обновляем массив word, чтобы показать две отображаемые буквы
-			const updatedWord = lettersArray.map((letter, index) => (
-				<div
-					key={index}
-					className={`field__word_hidden_item-word ${
-						visibleLetters.includes(letter) ? '' : 'hidden'
-					}`}
-				>
-					{visibleLetters.includes(letter) ? letter : letter}
-				</div>
-			))
-
-			setCorrectLetters(prevCorrectLetters => {
-				const newCorrectLetters = [...prevCorrectLetters, ...visibleLetters]
-				return newCorrectLetters
-			})
-
-			setWord(updatedWord)
-		}
-
-		// const isWordComplete = arrWord.every(letter =>
-		// 	correctLetters.includes(letter)
-		// )
-		// console.log(isWordComplete)
-		// if (isWordComplete) {
-		// 	setWin(true)
-		// 	setCountWin((countWin + 1) - 1)
-		// } else {
-		// 	return
-		// }
-
-		generateHiddenLetters()
-		setIsPlay(true)
-		setDefeat(false)
-		setWin(false)
 	}
 
 	const getLetterAlphabet = element => {
@@ -148,10 +140,11 @@ const App = () => {
 			setInCorrectLetters(prev => {
 				return [...prev, foundElement]
 			})
-	
+
 			if (inCorrectLetters.includes(foundElement)) {
 				return
 			}
+
 			if (count < 5) {
 				setCount(count + 1)
 				setIncorrectCount(incorrectCount + 1)
@@ -182,13 +175,16 @@ const App = () => {
 						{defeat || win ? (
 							<>
 								<div className='game_over'>
-									<span className='game_over-btn' onClick={handleRandomWord}>
-										Еще раз
-									</span>
-									<span className='game_over-btn' onClick={handleResetCategory}>
-										Выбрать тему
-									</span>
-									{defeat && (
+									<div className='game_over-buttons'>
+									<div className='game_over-btn' onClick={handleRandomWord}>
+										<img src={play} alt="" />
+									</div>
+									<div className='game_over-btn' onClick={handleResetCategory}>
+										<img src={reset} alt="" />
+									</div>
+									</div>
+								<div className='game_over-images'>
+								{defeat && (
 										<>
 											<img src={test7} alt='sad' />
 										</>
@@ -198,6 +194,7 @@ const App = () => {
 											<img src={test8} alt='happy' />
 										</>
 									)}
+								</div>
 								</div>
 							</>
 						) : (
@@ -210,7 +207,6 @@ const App = () => {
 								{incorrectCount === 5 && <img src={test6} alt='image3' />}
 							</>
 						)}
-
 					</div>
 					<div className='field'>
 						<div className='field__word'>
