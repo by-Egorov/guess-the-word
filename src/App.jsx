@@ -11,6 +11,8 @@ import {
 	test7,
 	test8,
 } from './assets/progress'
+import correct from './assets/correct.png'
+import incorrect from './assets/incorrect.png'
 import play from './assets/play.jpg'
 import reset from './assets/reset.jpg'
 const App = () => {
@@ -18,6 +20,7 @@ const App = () => {
 	const [count, setCount] = useState(0)
 	const [countWin, setCountWin] = useState(0)
 	const [countDefeat, setCountDefeat] = useState(0)
+	const [start, setStart] = useState(true)
 	// Проигрыш
 	const [defeat, setDefeat] = useState(false)
 	// Победа
@@ -38,20 +41,24 @@ const App = () => {
 	const [firstWord, setFirstWord] = useState([])
 	const arrWord = word.map(element => element.props.children)
 
+	const startGo = () => {
+		setStart(true)
+	}
 	const handleResetCategory = () => {
 		setSelectedCategory(null)
 	}
+
 	const handleRandomWord = () => {
 		setCorrectLetters([])
 		setInCorrectLetters([])
 		setCount(0)
 		setIncorrectCount(0)
-
 		const wordCategory = randomWord.find(
 			category => category.category === selectedCategory
 		)
+
 		const wordList = wordCategory.word
-		if (wordCategory.category) {
+		if (selectedCategory) {
 			const availableWords = wordList.filter(word => !firstWord.includes(word))
 			const wordShow =
 				availableWords[Math.floor(Math.random() * availableWords.length)]
@@ -98,6 +105,7 @@ const App = () => {
 			setIsPlay(true)
 			setDefeat(false)
 			setWin(false)
+			setStart(false)
 		} else {
 			console.log('Категория не найдена.')
 			return
@@ -131,9 +139,16 @@ const App = () => {
 							</div>
 						)
 					})
-
 					return updatedWord
 				})
+				const isWordComplete = arrWord.every(letter =>
+					newCorrectLetters.includes(letter)
+				)
+				if (isWordComplete) {
+					setCountWin(countWin + 1)
+					setWin(true)
+					// handleRandomWord()
+				}
 				return newCorrectLetters
 			})
 		} else {
@@ -156,58 +171,58 @@ const App = () => {
 			}
 		}
 	}
-	useEffect(() => {
-		const isWordComplete = arrWord.every(letter =>
-			correctLetters.includes(letter)
-		)
-		if (isWordComplete) {
-			setWin(true)
-		} else {
-			return
-		}
-	}, [correctLetters, arrWord])
-
 	return (
 		<div className='App'>
 			{selectedCategory ? (
 				<div className='wrapper'>
-					<div className='progress'>
-						{defeat || win ? (
-							<>
-								<div className='game_over'>
-									<div className='game_over-buttons'>
-									<div className='game_over-btn' onClick={handleRandomWord}>
-										<img src={play} alt="" />
+					{start ? (
+						<>
+							<button className='start' onClick={handleRandomWord}>
+								start
+							</button>
+						</>
+					) : (
+						<div className='progress'>
+							{defeat || win ? (
+								<>
+									<div className='game_over'>
+										<div className='game_over-buttons'>
+											<div className='game_over-btn' onClick={handleRandomWord}>
+												<img src={play} alt='' />
+											</div>
+											<div
+												className='game_over-btn'
+												onClick={handleResetCategory}
+											>
+												<img src={reset} alt='' />
+											</div>
+										</div>
+										<div className='game_over-images'>
+											{defeat && (
+												<>
+													<img src={test7} alt='sad' />
+												</>
+											)}
+											{win && (
+												<>
+													<img src={test8} alt='happy' />
+												</>
+											)}
+										</div>
 									</div>
-									<div className='game_over-btn' onClick={handleResetCategory}>
-										<img src={reset} alt="" />
-									</div>
-									</div>
-								<div className='game_over-images'>
-								{defeat && (
-										<>
-											<img src={test7} alt='sad' />
-										</>
-									)}
-									{win && (
-										<>
-											<img src={test8} alt='happy' />
-										</>
-									)}
-								</div>
-								</div>
-							</>
-						) : (
-							<>
-								{incorrectCount === 0 && <img src={test} alt='test' />}
-								{incorrectCount === 1 && <img src={test2} alt='image1' />}
-								{incorrectCount === 2 && <img src={test3} alt='image2' />}
-								{incorrectCount === 3 && <img src={test4} alt='image3' />}
-								{incorrectCount === 4 && <img src={test5} alt='image3' />}
-								{incorrectCount === 5 && <img src={test6} alt='image3' />}
-							</>
-						)}
-					</div>
+								</>
+							) : (
+								<>
+									{incorrectCount === 0 && <img src={test} alt='test' />}
+									{incorrectCount === 1 && <img src={test2} alt='image1' />}
+									{incorrectCount === 2 && <img src={test3} alt='image2' />}
+									{incorrectCount === 3 && <img src={test4} alt='image3' />}
+									{incorrectCount === 4 && <img src={test5} alt='image3' />}
+									{incorrectCount === 5 && <img src={test6} alt='image3' />}
+								</>
+							)}
+						</div>
+					)}
 					<div className='field'>
 						<div className='field__word'>
 							<div
@@ -228,13 +243,19 @@ const App = () => {
 									{item}
 								</div>
 							))}
-							<span>Слов отгадано: {countWin}</span>
-							<span>Слов не отгадано: {countDefeat}</span>
 						</div>
+						<div className='count'>
+								<span>
+									<img src={correct} alt='correct' /> {countWin}
+								</span>
+								<span>
+									<img src={incorrect} alt='incorrect' /> {countDefeat}
+								</span>
+							</div>
 					</div>
 				</div>
 			) : (
-				<>
+				<div className='selected'>
 					<select
 						className='field__category_select'
 						onChange={e => setSelectedCategory(e.target.value)}
@@ -248,7 +269,7 @@ const App = () => {
 							</option>
 						))}
 					</select>
-				</>
+				</div>
 			)}
 		</div>
 	)
