@@ -245,13 +245,13 @@ const App = () => {
 							))}
 						</div>
 						<div className='count'>
-								<span className='count-win'>
-									<img src={correct} alt='correct' /> {countWin}
-								</span>
-								<span className='count-defeat'>
-									<img src={incorrect} alt='incorrect' /> {countDefeat}
-								</span>
-							</div>
+							<span className='count-win'>
+								<img src={correct} alt='correct' /> {countWin}
+							</span>
+							<span className='count-defeat'>
+								<img src={incorrect} alt='incorrect' /> {countDefeat}
+							</span>
+						</div>
 					</div>
 				</div>
 			) : (
