@@ -12,10 +12,8 @@
 
 .wrapper {
 	display: flex;
-	flex-direction: column;
-	background-color: #b8b8b6;
-	width: 600px;
-	height: 700px;
+	align-items: center;
+	justify-content: space-between;
 	gap: 30px;
 	padding: 50px;
 	margin: 100px auto;
@@ -31,12 +29,16 @@
 		padding-top: 15px;
 		background-color: transparent;
 	}
+	@include phones {
+		flex-direction: column;
+		gap: 100px;
+	}
 }
 .progress {
 	display: flex;
 	flex-direction: column;
-	width: 250px;
-	height: 170px;
+	width: 400px;
+	height: 250px;
 	& img {
 		width: 100%;
 	}
@@ -67,12 +69,15 @@
 		& option {
 			font-family: 'Rubik Doodle Shadow';
 		}
+		@include phones {
+			letter-spacing: normal;
+			font-size: 25px;
+		}
 
 		@include tablets {
 			position: absolute;
 			top: 50%;
 			left: 15%;
-			font-size: 28px;
 		}
 	}
 	&__word {
@@ -116,12 +121,11 @@
 	}
 	&__alphabet {
 		width: 650px;
-		height: 200px;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
 		justify-content: center;
-		gap: 16px;
+		gap: 18px;
 		font-size: 32px;
 		padding: 10px;
 
@@ -284,19 +288,28 @@
 	text-transform: uppercase;
 	font-size: 16px;
 	border-radius: 37% 63% 31% 69% / 57% 0% 100% 43% ;
+	margin-top: 50px;
 	padding: 10px;
 }
  .count {
 	display: flex;
-	flex-direction: column;
-	gap: 10px;
+	gap: 50px;
 	& span {
 		display: flex;
 		align-items: center;
 		gap: 10px;
 		& img {
-			width: 24px;
-			height: 24px;
+			width: 42px;
+			height: 42px;
+			
+			@include phones {
+				width: 24px;
+				height: 24px;
+			}
+			@include tablets {
+				width: 24px;
+				height: 24px;
+			}
 		}
 	}
  }
