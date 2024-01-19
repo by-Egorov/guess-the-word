@@ -245,10 +245,10 @@ const App = () => {
 							))}
 						</div>
 						<div className='count'>
-								<span>
+								<span className='count-win'>
 									<img src={correct} alt='correct' /> {countWin}
 								</span>
-								<span>
+								<span className='count-defeat'>
 									<img src={incorrect} alt='incorrect' /> {countDefeat}
 								</span>
 							</div>
