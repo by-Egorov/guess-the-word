@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { alphabet } from './utils/alphabet'
 import { randomWord } from './utils/words'
 import {
@@ -13,8 +13,7 @@ import {
 } from './assets/progress'
 import correct from './assets/correct.png'
 import incorrect from './assets/incorrect.png'
-import play from './assets/play.jpg'
-import reset from './assets/reset.jpg'
+
 const App = () => {
 	// Счетчик попыток угадать слово
 	const [count, setCount] = useState(0)
@@ -41,9 +40,7 @@ const App = () => {
 	const [firstWord, setFirstWord] = useState([])
 	const arrWord = word.map(element => element.props.children)
 
-	const startGo = () => {
-		setStart(true)
-	}
+
 	const handleResetCategory = () => {
 		setSelectedCategory(null)
 	}
@@ -188,13 +185,15 @@ const App = () => {
 									<div className='game_over'>
 										<div className='game_over-buttons'>
 											<div className='game_over-btn' onClick={handleRandomWord}>
-												<img src={play} alt='' />
+												Играть
+												{/* <img src={play} alt='' /> */}
 											</div>
 											<div
 												className='game_over-btn'
 												onClick={handleResetCategory}
 											>
-												<img src={reset} alt='' />
+												Поменять категорию
+												{/* <img src={reset} alt='' /> */}
 											</div>
 										</div>
 										<div className='game_over-images'>
@@ -255,12 +254,12 @@ const App = () => {
 					</div>
 				</div>
 			) : (
-				<div className='selected'>
+				<div className='select'>
 					<select
-						className='field__category_select'
+						name="format" id="format"
 						onChange={e => setSelectedCategory(e.target.value)}
 					>
-						<option value='' disabled selected>
+						<option disabled selected >
 							Выберите категорию
 						</option>
 						{randomWord.map(category => (
